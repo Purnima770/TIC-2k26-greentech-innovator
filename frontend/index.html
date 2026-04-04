@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Green Tech Innovator — Agritourism Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">Green<span>Tech</span></div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('home')">Discover</button>
+    <button class="nav-link" onclick="showPage('marketplace')">Marketplace</button>
+    <button class="nav-link" onclick="showPage('booking')">Book a Stay</button>
+    <button class="nav-link" onclick="showPage('training')">Training Hub</button>
+    <button class="nav-link" onclick="showPage('community')">Community</button>
+    <button class="nav-link" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-link" onclick="showPage('chat')">Chat</button>
+  </div>
+  <div class="nav-right">
+    <button class="btn-outline" onclick="openModal('login')">Sign In</button>
+    <button class="btn-primary" onclick="openModal('register')">Join Free</button>
+  </div>
+</nav>
+
+<!-- ==================== HOME PAGE ==================== -->
+<div id="page-home" class="page active">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">🌱 India's #1 Agritourism Platform</div>
+    <h1>Connect with<br/><em>Rural India's</em><br/>Living Heritage</h1>
+    <p>Discover authentic farm experiences, book homestays, and support local farmers across India's most beautiful villages.</p>
+    <div class="hero-cta">
+      <button class="btn-hero btn-hero-green" onclick="showPage('booking')">Book a Farm Stay</button>
+      <button class="btn-hero btn-hero-outline" onclick="openModal('farmer')">List Your Farm</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">1,240+</div><div class="stat-label">Farms Listed</div></div>
+      <div class="stat"><div class="stat-num">18</div><div class="stat-label">States Covered</div></div>
+      <div class="stat"><div class="stat-num">42K+</div><div class="stat-label">Happy Tourists</div></div>
+      <div class="stat"><div class="stat-num">4.8★</div><div class="stat-label">Avg. Rating</div></div>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="section" style="padding-bottom:0">
+    <div class="section-inner">
+      <div class="search-wrap">
+        <div class="search-field">
+          <div class="search-label">Destination</div>
+          <input class="search-input" placeholder="State, village, or region..." id="search-dest"/>
+        </div>
+        <div class="search-divider"></div>
+        <div class="search-field">
+          <div class="search-label">Check In</div>
+          <input class="search-input" type="date" id="search-in"/>
+        </div>
+        <div class="search-divider"></div>
+        <div class="search-field">
+          <div class="search-label">Check Out</div>
+          <input class="search-input" type="date" id="search-out"/>
+        </div>
+        <div class="search-divider"></div>
+        <div class="search-field">
+          <div class="search-label">Guests</div>
+          <input class="search-input" placeholder="2 adults" id="search-guests"/>
+        </div>
+        <button class="btn-search" onclick="handleSearch()">🔍 Search</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI RECOMMENDATION -->
+  <div class="section" style="padding-top:1.5rem">
+    <div class="section-inner">
+      <div class="ai-card">
+        <div class="ai-label">✦ AI-Powered Trip Planner</div>
+        <h2 class="ai-title">Tell us your dream farm experience</h2>
+        <p class="ai-desc">Describe what you're looking for and our AI will curate the perfect rural experience for you — from harvest festivals to tribal art trails.</p>
+        <div class="ai-input-wrap">
+          <input class="ai-input" id="ai-prompt" placeholder="E.g. 'A quiet wheat farm in Punjab for 3 days with my family, budget ₹5000/night'" onkeydown="if(event.key==='Enter')runAI()"/>
+          <button class="btn-primary" onclick="runAI()" style="border-radius:10px;padding:0.75rem 1.4rem">Get Recommendations →</button>
+        </div>
+        <div class="ai-result" id="ai-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FARM LISTINGS -->
+  <div class="section" style="padding-top:1rem">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Featured Farm Stays</div>
+          <div class="section-subtitle">Handpicked experiences across India's richest farming regions</div>
+        </div>
+        <button class="link-all">View all 1,240+ farms →</button>
+      </div>
+      <div class="category-chips">
+        <div class="chip active" onclick="filterFarms(this,'all')">All Farms</div>
+        <div class="chip" onclick="filterFarms(this,'harvest')">Harvest Stays</div>
+        <div class="chip" onclick="filterFarms(this,'organic')">Organic Farms</div>
+        <div class="chip" onclick="filterFarms(this,'tribal')">Tribal Villages</div>
+        <div class="chip" onclick="filterFarms(this,'adventure')">Adventure</div>
+        <div class="chip" onclick="filterFarms(this,'family')">Family Friendly</div>
+      </div>
+      <div class="cards-grid" id="farm-grid"></div>
+    </div>
+  </div>
+
+  <!-- UPCOMING FESTIVALS -->
+  <div class="section" style="background:var(--mist)">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Seasonal Festivals & Harvests</div>
+          <div class="section-subtitle">Plan your visit around India's rich agricultural calendar</div>
+        </div>
+      </div>
+      <div class="cards-grid" id="festival-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))"></div>
+    </div>
+  </div>
+
+  <!-- ADOPT A FARM -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Adopt a Farm</div>
+          <div class="section-subtitle">Build a lasting bond with a farming family and support rural livelihoods year-round</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem" id="adopt-grid"></div>
+    </div>
+  </div>
+
+  <!-- REVIEWS -->
+  <div class="section" style="background:var(--mist)">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-title">Traveller Stories</div>
+      </div>
+      <div class="cards-grid" id="reviews-grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MARKETPLACE PAGE ==================== -->
+<div id="page-marketplace" class="page">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Farm Marketplace</div>
+          <div class="section-subtitle">Organic produce, handcrafted goods, and tribal artworks — direct from farmers</div>
+        </div>
+        <button id="cart-btn" class="link-all btn-primary" 
+style="font-size:0.82rem;padding:0.5rem 1.1rem;border-radius:var(--radius-sm)">
+🛒 Cart (0)
+</button>
+      </div>
+      <div class="category-chips">
+        <div class="chip active">All Products</div>
+        <div class="chip">Organic Food</div>
+        <div class="chip">Handicrafts</div>
+        <div class="chip">Tribal Art</div>
+        <div class="chip">Spices & Herbs</div>
+        <div class="chip">Honey & Dairy</div>
+      </div>
+      <div class="cards-grid" id="market-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BOOKING PAGE ==================== -->
+<div id="page-booking" class="page">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-title" style="margin-bottom:1.5rem">Book Your Farm Stay</div>
+      <div class="booking-layout">
+        <div>
+          <!-- STEP 1: Choose Farm -->
+          <div class="booking-card" style="margin-bottom:1.2rem">
+            <h3 style="font-family:'Playfair Display',serif;color:var(--forest);margin-bottom:1rem;font-size:1.1rem">1 · Select Your Farm</h3>
+            <div class="form-group">
+              <label class="form-label">Destination / Farm Name</label>
+              <select class="form-select">
+                <option>Sunrise Organic Farm, Maharashtra</option>
+                <option>Tribal Heritage Stay, Chhattisgarh</option>
+                <option>Golden Wheat Fields, Punjab</option>
+                <option>Spice Trail Homestay, Kerala</option>
+                <option>Bamboo Valley Retreat, Assam</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Check In</label>
+                <input class="form-input" type="date"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Check Out</label>
+                <input class="form-input" type="date"/>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Adults</label>
+                <input class="form-input" type="number" value="2" min="1"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Children</label>
+                <input class="form-input" type="number" value="0" min="0"/>
+              </div>
+            </div>
+          </div>
+          <!-- STEP 2: Experiences -->
+          <div class="booking-card" style="margin-bottom:1.2rem">
+            <h3 style="font-family:'Playfair Display',serif;color:var(--forest);margin-bottom:1rem;font-size:1.1rem">2 · Add Experiences</h3>
+            <div id="exp-options" style="display:flex;flex-direction:column;gap:0.6rem"></div>
+          </div>
+          <!-- STEP 3: Guest Details -->
+          <div class="booking-card" style="margin-bottom:1.2rem">
+            <h3 style="font-family:'Playfair Display',serif;color:var(--forest);margin-bottom:1rem;font-size:1.1rem">3 · Guest Details</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input class="form-input" placeholder="Arjun"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input class="form-input" placeholder="Sharma"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="form-input" type="email" placeholder="arjun@example.com"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone (for farmer communication)</label>
+              <input class="form-input" placeholder="+91 98765 43210"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Special Requests</label>
+              <textarea class="form-textarea" placeholder="Dietary needs, accessibility requirements, interests..."></textarea>
+            </div>
+          </div>
+          <!-- STEP 4: Payment -->
+          <div class="booking-card">
+            <h3 style="font-family:'Playfair Display',serif;color:var(--forest);margin-bottom:1rem;font-size:1.1rem">4 · Payment Method</h3>
+            <div class="upi-wrap" style="box-shadow:none;padding:0">
+              <div class="upi-options" id="upi-opts"></div>
+            </div>
+            <div style="margin-top:1rem;padding:0.9rem;background:var(--mist);border-radius:var(--radius-sm);font-size:0.82rem;color:var(--text-mid)">
+              🔒 All payments are 256-bit encrypted and UPI-compliant. Your data is safe.
+            </div>
+            <button class="btn-book" onclick="confirmBooking()">Confirm & Pay ₹6,750</button>
+          </div>
+        </div>
+        <!-- SUMMARY -->
+        <div class="summary-card">
+          <div class="summary-img">🌾</div>
+          <div class="summary-name">Sunrise Organic Farm</div>
+          <div class="summary-loc">📍 Nashik, Maharashtra</div>
+          <div class="summary-row"><span>2 nights × ₹2,500</span><span>₹5,000</span></div>
+          <div class="summary-row"><span>Harvest Experience</span><span>₹800</span></div>
+          <div class="summary-row"><span>Village Tour</span><span>₹500</span></div>
+          <div class="summary-row"><span>Taxes & fees (9%)</span><span>₹450</span></div>
+          <div class="summary-total"><span>Total</span><span>₹6,750</span></div>
+          <div style="margin-top:1rem;font-size:0.78rem;color:rgba(255,255,255,0.55);line-height:1.6">
+            ✓ Free cancellation up to 48 hrs<br/>✓ Farmer verified & safety-checked<br/>✓ 24/7 emergency support
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TRAINING HUB ==================== -->
+<div id="page-training" class="page">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Farmer Training Hub</div>
+          <div class="section-subtitle">Upskill in hospitality, safety, digital tools, and business management</div>
+        </div>
+        <div style="font-size:0.85rem;color:var(--text-mid)">Your progress: <strong style="color:var(--sage)">3/8 courses</strong></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.85rem" id="courses-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== COMMUNITY ==================== -->
+<div id="page-community" class="page">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-title">Farmer Community Forum</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start" id="community-layout">
+        <div>
+          <div style="display:flex;gap:0.5rem;margin-bottom:1.2rem">
+            <input class="form-input" placeholder="Search discussions..." style="flex:1"/>
+            <button class="btn-primary" style="border-radius:var(--radius-sm);padding:0.6rem 1.1rem;font-size:0.85rem" onclick="openModal('newpost')">+ New Post</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem" id="forum-list"></div>
+        </div>
+        <div>
+          <div class="booking-card">
+            <div style="font-weight:700;font-size:0.9rem;margin-bottom:1rem;color:var(--forest)">🏆 Top Contributors</div>
+            <div id="leaderboard" style="display:flex;flex-direction:column;gap:0.75rem"></div>
+          </div>
+          <div class="booking-card" style="margin-top:1rem">
+            <div style="font-weight:700;font-size:0.9rem;margin-bottom:1rem;color:var(--forest)">📚 Knowledge Hub</div>
+            <div style="display:flex;flex-direction:column;gap:0.5rem" id="kb-links"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DASHBOARD ==================== -->
+<div id="page-dashboard" class="page">
+  <div class="section">
+    <div class="section-inner">
+      <div class="dashboard-grid">
+        <!-- SIDEBAR -->
+        <div class="dashboard-sidebar">
+          <div class="sidebar-profile">
+            <div class="avatar">RK</div>
+            <div class="sidebar-name">Ramesh Kumar</div>
+            <div class="sidebar-role">Organic Farmer · Nashik</div>
+            <div class="sidebar-badge">⭐ Gold Member</div>
+          </div>
+          <div class="sidebar-nav">
+            <button class="sidebar-nav-item active" onclick="switchDash(this,'overview')"><span class="icon">📊</span>Overview</button>
+            <button class="sidebar-nav-item" onclick="switchDash(this,'earnings')"><span class="icon">💰</span>Earnings</button>
+            <button class="sidebar-nav-item" onclick="switchDash(this,'bookings')"><span class="icon">📅</span>Bookings</button>
+            <button class="sidebar-nav-item" onclick="switchDash(this,'listings')"><span class="icon">🏡</span>My Listings</button>
+            <button class="sidebar-nav-item" onclick="switchDash(this,'profile')"><span class="icon">👤</span>Profile</button>
+            <button class="sidebar-nav-item" onclick="switchDash(this,'analytics')"><span class="icon">📈</span>Analytics</button>
+            <button class="sidebar-nav-item" onclick="switchDash(this,'achievements')"><span class="icon">🏅</span>Achievements</button>
+          </div>
+        </div>
+        <!-- MAIN CONTENT -->
+        <div id="dash-main">
+          <!-- Overview (default) -->
+          <div id="dash-overview">
+            <div class="metric-cards">
+              <div class="metric-card"><div class="metric-label">Total Earnings</div><div class="metric-value">₹1.24L</div><div class="metric-change">↑ 23% this month</div></div>
+              <div class="metric-card"><div class="metric-label">Total Bookings</div><div class="metric-value">84</div><div class="metric-change">↑ 12 this week</div></div>
+              <div class="metric-card"><div class="metric-label">Avg. Rating</div><div class="metric-value">4.9</div><div class="metric-change">↑ 0.1 from last month</div></div>
+              <div class="metric-card"><div class="metric-label">Visitors</div><div class="metric-value">218</div><div class="metric-change">↑ 34% vs last year</div></div>
+            </div>
+            <div class="chart-wrap">
+              <div class="chart-title">Monthly Earnings (₹ thousands)</div>
+              <div class="bar-chart" id="earnings-chart"></div>
+            </div>
+            <div class="chart-wrap">
+              <div class="chart-title">Recent Bookings</div>
+              <table class="recent-table">
+                <thead><tr><th>Guest</th><th>Check-in</th><th>Nights</th><th>Amount</th><th>Status</th></tr></thead>
+                <tbody id="bookings-table"></tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Achievements -->
+          <div id="dash-achievements" style="display:none">
+            <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--forest);margin-bottom:1.2rem">Your Achievements</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem" id="achievements-grid"></div>
+          </div>
+          <!-- Analytics -->
+          <div id="dash-analytics" style="display:none">
+            <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--forest);margin-bottom:1.2rem">Visitor Analytics</div>
+            <div class="metric-cards" style="margin-bottom:1.2rem">
+              <div class="metric-card"><div class="metric-label">Page Views</div><div class="metric-value">3.2K</div><div class="metric-change">↑ 18% this week</div></div>
+              <div class="metric-card"><div class="metric-label">Inquiries</div><div class="metric-value">142</div><div class="metric-change">↑ 9% this week</div></div>
+              <div class="metric-card"><div class="metric-label">Conversion</div><div class="metric-value">59%</div><div class="metric-change">↑ 3% this month</div></div>
+            </div>
+            <div class="chart-wrap">
+              <div class="chart-title">Visitor Trends (last 6 months)</div>
+              <div class="bar-chart" id="visitor-chart"></div>
+            </div>
+            <div class="chart-wrap">
+              <div class="chart-title">Top Traffic Sources</div>
+              <div style="display:flex;flex-direction:column;gap:0.75rem;margin-top:0.5rem" id="traffic-sources"></div>
+            </div>
+          </div>
+          <!-- Profile (Farmer) -->
+          <div id="dash-profile" style="display:none">
+            <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--forest);margin-bottom:1.2rem">Farmer Profile</div>
+            <div class="booking-card">
+              <div class="form-group"><label class="form-label">Farm Name</label><input class="form-input" value="Sunrise Organic Farm"/></div>
+              <div class="form-group"><label class="form-label">Location</label><input class="form-input" value="Nashik, Maharashtra"/></div>
+              <div class="form-group"><label class="form-label">About Your Farm</label><textarea class="form-textarea">We grow 100% organic vegetables, fruits and grains across 12 acres of rich Deccan soil...</textarea></div>
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Price per Night (₹)</label><input class="form-input" value="2500"/></div>
+                <div class="form-group"><label class="form-label">Max Guests</label><input class="form-input" value="8"/></div>
+              </div>
+              <button class="btn-book" onclick="saveProfile()">Save Profile</button>
+            </div>
+          </div>
+          <!-- Earnings -->
+          <div id="dash-earnings" style="display:none">
+            <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--forest);margin-bottom:1.2rem">Earnings Breakdown</div>
+            <div class="metric-cards">
+              <div class="metric-card"><div class="metric-label">This Month</div><div class="metric-value">₹18,400</div><div class="metric-change">↑ 23%</div></div>
+              <div class="metric-card"><div class="metric-label">Pending Payout</div><div class="metric-value">₹6,200</div><div class="metric-change" style="color:var(--gold)">Processing</div></div>
+              <div class="metric-card"><div class="metric-label">Marketplace</div><div class="metric-value">₹4,800</div><div class="metric-change">↑ 41%</div></div>
+            </div>
+            <div class="chart-wrap">
+              <div class="chart-title">Income Sources</div>
+              <div style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.5rem" id="income-sources"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CHAT PAGE ==================== -->
+<div id="page-chat" class="page">
+  <div class="section">
+    <div class="section-inner">
+      <div class="chat-layout">
+        <div class="chat-list">
+          <div class="chat-list-header">💬 Messages</div>
+          <div id="chat-contacts"></div>
+        </div>
+        <div class="chat-window">
+          <div class="chat-header">
+            <div class="chat-header-avatar" id="chat-active-avatar">RS</div>
+            <div class="chat-header-info">
+              <h4 id="chat-active-name">Rajesh Singh</h4>
+              <p id="chat-active-role">Sunrise Organic Farm, Nashik</p>
+            </div>
+          </div>
+          <div class="chat-messages" id="chat-messages"></div>
+          <div class="chat-input-wrap">
+            <input class="chat-input" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+            <button class="btn-send" onclick="sendMsg()">↑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay hidden" id="modal-overlay" onclick="closeModal(event)">
+  <!-- Login -->
+  <div class="modal" id="modal-login" style="display:none">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Welcome Back 🌿</div>
+    <div class="modal-subtitle">Sign in to continue your rural journey</div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="login-email" placeholder="you@example.com"/></div>
+    <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="login-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"/></div>
+    <button class="btn-book" id="login-btn" onclick="login()">Sign In</button>
+    <p style="text-align:center;margin-top:1rem;font-size:0.83rem;color:var(--text-light)">Don't have an account? <a href="#" style="color:var(--sage);font-weight:600" onclick="switchModal('register')">Join Free</a></p>
+  </div>
+  <!-- Register -->
+  <div class="modal" id="modal-register" style="display:none">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Join GreenTech 🌱</div>
+    <div class="modal-subtitle">Create your account to explore authentic farm experiences</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">First Name</label><input class="form-input" id="reg-firstname" placeholder="Arjun"/></div>
+      <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" id="reg-lastname" placeholder="Sharma"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="reg-email" placeholder="arjun@example.com"/></div>
+    <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="reg-phone" placeholder="+91 98765 43210"/></div>
+    <div class="form-group"><label class="form-label">I am a</label>
+      <select class="form-select" id="reg-role"><option>Tourist / Traveller</option><option>Farmer / Host</option><option>Student / Researcher</option></select>
+    </div>
+    <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="reg-password" type="password" placeholder="Min. 6 characters"/></div>
+    <button class="btn-book" id="reg-btn" onclick="register()">Create Account</button>
+  </div>
+  <!-- Farmer Registration -->
+  <div class="modal" id="modal-farmer" style="display:none">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">List Your Farm 🏡</div>
+    <div class="modal-subtitle">Join 1,240+ farmers earning from agritourism</div>
+    <div class="form-group"><label class="form-label">Farm Name</label><input class="form-input" id="farm-name" placeholder="e.g. Golden Acres Organic Farm"/></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">State</label>
+        <select class="form-select" id="farm-state"><option>Chhattisgarh</option><option>Maharashtra</option><option>Punjab</option><option>Kerala</option><option>Assam</option><option>Rajasthan</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">District</label><input class="form-input" id="farm-district" placeholder="District name"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Farm Area (acres)</label><input class="form-input" id="farm-area" type="number" placeholder="e.g. 15"/></div>
+    <div class="form-group"><label class="form-label">Primary Crops/Activities</label><input class="form-input" id="farm-crops" placeholder="Wheat, mango, dairy, tribal art..."/></div>
+    <div class="form-group"><label class="form-label">Starting Price per Night (₹)</label><input class="form-input" id="farm-price" type="number" placeholder="1500"/></div>
+    <button class="btn-book" id="farm-submit-btn" onclick="submitFarm()">Submit for Verification</button>
+  </div>
+  <!-- New Forum Post -->
+  <div class="modal" id="modal-newpost" style="display:none">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Start a Discussion</div>
+    <div class="modal-subtitle">Share knowledge, ask questions, help your community</div>
+    <div class="form-group"><label class="form-label">Title</label><input class="form-input" placeholder="What's on your mind?"/></div>
+    <div class="form-group"><label class="form-label">Category</label>
+      <select class="form-select"><option>Hospitality Tips</option><option>Pricing & Earnings</option><option>Safety & Guidelines</option><option>Tech & Digital Tools</option><option>Seasonal Advice</option><option>Success Stories</option></select>
+    </div>
+    <div class="form-group"><label class="form-label">Your Post</label><textarea class="form-textarea" placeholder="Share your experience, question, or advice..."></textarea></div>
+    <button class="btn-book" onclick="closeModal();showToast('Post published! 🌿')">Publish Post</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<footer>
+  <strong>Green Tech Innovator</strong> — Connecting Rural India with Urban Hearts<br/>
+  <span style="font-size:0.75rem;margin-top:0.3rem;display:block">Built with ❤️ for farmers, by innovators · © 2026 GreenTech Agritourism Pvt. Ltd.</span>
+</footer>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
