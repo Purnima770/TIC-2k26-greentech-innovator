@@ -1,0 +1,13 @@
+{
+  "name": "tech",
+  "version": "1.0.0",
+  "description": "Full-stack project: Node.js/Express backend + Vanilla JS frontend, connected to MongoDB with JWT auth and Razorpay payments.",
+  "main": "index.js",
+  "scripts": {
+  "start": "node server.js"
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
