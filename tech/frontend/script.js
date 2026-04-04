@@ -2,7 +2,7 @@
 //  GreenTech Pro — Frontend Script (Connected to Backend)
 // ============================================================
 
-const API = 'http://localhost:5000/api';
+const API = 'https://tic-2k26-greentech-innovator.onrender.com';
 
 // ---- AUTH STATE ----
 let currentUser = null;
